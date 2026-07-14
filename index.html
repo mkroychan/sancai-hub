@@ -97,6 +97,11 @@ footer{text-align:center;color:var(--dim);font-size:11px;margin-top:30px;letter-
 
 <div class="countdowns" id="cds"></div>
 
+<a class="card" id="fbBtn" style="background:linear-gradient(135deg,#3A2415,#221C13);border-color:#5A3A22;text-align:center;padding:15px">
+  <b style="font-size:16px">🛠️ 反馈升级 · 召唤执行者</b>
+  <p style="margin-top:4px">点击 → 自动复制召唤语 → 跳转 Claude → 粘贴发送</p>
+</a>
+
 <!-- 地爻 · 进行中 -->
 <section class="tier">
   <div class="tier-head">
@@ -126,6 +131,12 @@ footer{text-align:center;color:var(--dim);font-size:11px;margin-top:30px;letter-
     <div class="card-top"><i class="dot blue"></i><b>停车罚单复核</b><span class="tag">Whitehorse</span></div>
     <p>6/29 已提交申诉 · 等待结果 · 7月底跟进</p>
   </a>
+
+  <div class="card">
+    <div class="card-top"><i class="dot amber"></i><b>📦 入库工程</b><span class="tag">四线并行</span></div>
+    <p>📚书:过滤→拍封面/序/目录→虚拟藏书阁 · 📷照片:外包扫描 · 💿CD:典藏志 · 📄文件:原件一盒+备份</p>
+    <div class="next">搬家前收线 · 每天15分钟 · 书拍好一批发 Claude</div>
+  </div>
 
   <div class="card">
     <div class="card-top"><i class="dot blue"></i><b>租金上调合规审查</b><span class="tag">🤫 静默</span></div>
@@ -176,6 +187,9 @@ footer{text-align:center;color:var(--dim);font-size:11px;margin-top:30px;letter-
       <span class="ico">🍱</span><b>Meal Hub 订餐</b>
       <span>100菜品 · 选餐/库存/下单 · 运行中</span>
     </a>
+    <a class="app" href="https://mkroychan.github.io/meal-hub/pool.html">
+      <span class="ico">⭐</span><b>选餐池</b><span>入池→配套→输出</span>
+    </a>
     <a class="app" href="https://docs.google.com/document/d/13PhjNHT7Dw34IJtkhLpVomtz2m1kMrCPI4QnM47J46c/edit">
       <span class="ico">📋</span><b>总控台文档</b><span>阅读版详情</span>
     </a>
@@ -209,7 +223,7 @@ footer{text-align:center;color:var(--dim);font-size:11px;margin-top:30px;letter-
   </div>
 </section>
 
-<footer>数据归己 · 借来的火 · MK ⇄ C · 2026</footer>
+<footer>数据归己 · 借来的火 · MK ⇄ C · v1.2 · 2026-07-14</footer>
 </div>
 
 <script>
@@ -233,6 +247,21 @@ marks.forEach(m=>{
   el.className = 'cd' + (days<=14?' hot':'');
   el.innerHTML = '<b>'+(days<0?'过期':days+'天')+'</b><span>'+m.n+' '+m.d.slice(5).replace('-','/')+'</span>';
   box.appendChild(el);
+});
+
+// 反馈升级闭环:复制召唤语 → 跳转 Claude
+document.getElementById('fbBtn').addEventListener('click', async (e)=>{
+  e.preventDefault();
+  const call='续接三才项目,我有反馈:';
+  try{ await navigator.clipboard.writeText(call); }
+  catch(err){
+    const ta=document.createElement('textarea');
+    ta.value=call; document.body.appendChild(ta);
+    ta.select(); document.execCommand('copy'); ta.remove();
+  }
+  const b=document.getElementById('fbBtn').querySelector('b');
+  b.textContent='✓ 召唤语已复制,正在跳转…';
+  setTimeout(()=>{ window.location.href='https://claude.ai'; }, 700);
 });
 
 // 触发语一键复制
