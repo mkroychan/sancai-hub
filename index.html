@@ -25,7 +25,7 @@ h1{font-family:'Noto Serif SC',serif;font-weight:900;font-size:26px;letter-spaci
 .sub{color:var(--dim);font-size:12px;letter-spacing:2px;margin-top:4px}
 #today{color:var(--gold)}
 
-/* ── 倒数 ── */
+/* ── 倒数(① 看的:无符号) ── */
 .countdowns{display:flex;gap:8px;overflow-x:auto;padding:14px 0 4px;scrollbar-width:none}
 .countdowns::-webkit-scrollbar{display:none}
 .cd{flex:0 0 auto;background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:9px 13px;text-align:center;min-width:96px}
@@ -43,7 +43,7 @@ h1{font-family:'Noto Serif SC',serif;font-weight:900;font-size:26px;letter-spaci
 .tier-head small{color:var(--dim);font-size:11px;letter-spacing:1px}
 
 /* ── 项目卡 ── */
-.card{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:14px;margin-bottom:10px;display:block;color:inherit;text-decoration:none}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:14px;margin-bottom:10px;display:block;color:inherit;text-decoration:none;position:relative}
 a.card:active{background:var(--panel2)}
 .card-top{display:flex;align-items:center;gap:8px;margin-bottom:6px}
 .dot{width:9px;height:9px;border-radius:50%;flex:0 0 auto}
@@ -57,9 +57,19 @@ a.card:active{background:var(--panel2)}
 .card .next{margin-top:7px;font-size:13px;color:var(--gold)}
 .card .next::before{content:"→ ";color:var(--fire)}
 
+/* ── ② 进的:导航符号 › ↗ ── */
+.sym{color:var(--gold);font-size:19px;font-weight:700;flex:0 0 auto;padding-left:6px}
+.app .sym{position:absolute;top:10px;right:12px;font-size:16px;padding:0}
+
+/* ── ③ 做的:全页唯一橙色 ── */
+.action{display:block;background:linear-gradient(135deg,#E0533D,#C2591E);border:none;border-radius:16px;padding:16px;margin-top:14px;text-align:center;color:#FFF7EC;text-decoration:none;box-shadow:0 4px 16px rgba(224,83,61,.3)}
+.action:active{transform:scale(.985)}
+.action b{font-size:16px}
+.action p{margin-top:4px;font-size:12.5px;color:#FFE3D6}
+
 /* ── App 体验区 ── */
 .apps{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-.app{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:16px 12px;text-align:center;color:inherit;text-decoration:none}
+.app{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:16px 12px;text-align:center;color:inherit;text-decoration:none;position:relative}
 .app:active{background:var(--panel2)}
 .app .ico{font-size:28px;display:block;margin-bottom:6px}
 .app b{font-size:14px;display:block}
@@ -67,16 +77,18 @@ a.card:active{background:var(--panel2)}
 .app.hero{grid-column:1/-1;background:linear-gradient(135deg,#3A2415,#221C13);border-color:#5A3A22}
 .app.hero .ico{font-size:34px}
 
-/* ── 触发语 ── */
+/* ── ③轻量:触发语 = 复制动作 ⧉ ── */
 .triggers{display:grid;grid-template-columns:1fr 1fr;gap:8px}
 .trg{background:var(--panel);border:1px dashed var(--line);border-radius:12px;padding:11px 12px;cursor:pointer;position:relative}
 .trg:active{background:var(--panel2)}
 .trg b{font-family:'Noto Serif SC',serif;font-size:15px;color:var(--gold);display:block}
 .trg span{font-size:11px;color:var(--dim)}
+.trg::before{content:"⧉";position:absolute;top:8px;right:10px;font-size:13px;color:var(--dim)}
 .trg.copied{border-color:var(--jade)}
-.trg.copied::after{content:"已复制 ✓";position:absolute;top:8px;right:10px;font-size:10px;color:var(--jade)}
+.trg.copied::after{content:"已复制 ✓";position:absolute;top:8px;right:10px;font-size:10px;color:var(--jade);background:var(--panel);padding-left:4px}
 
-footer{text-align:center;color:var(--dim);font-size:11px;margin-top:30px;letter-spacing:1px}
+.legend{text-align:center;color:var(--dim);font-size:12px;letter-spacing:.06em;margin-top:26px}
+footer{text-align:center;color:var(--dim);font-size:11px;margin-top:8px;letter-spacing:1px}
 @media (prefers-reduced-motion:no-preference){
   .card,.app,.trg{transition:background .15s}
   .dot.red{animation:pulse 2.4s infinite}
@@ -97,9 +109,9 @@ footer{text-align:center;color:var(--dim);font-size:11px;margin-top:30px;letter-
 
 <div class="countdowns" id="cds"></div>
 
-<a class="card" id="fbBtn" style="background:linear-gradient(135deg,#3A2415,#221C13);border-color:#5A3A22;text-align:center;padding:15px">
-  <b style="font-size:16px">🛠️ 反馈升级 · 召唤执行者</b>
-  <p style="margin-top:4px">点击 → 自动复制召唤语 → 跳转 Claude → 粘贴发送</p>
+<a class="action" id="fbBtn" href="https://claude.ai">
+  <b>🛠️ 反馈升级 · 召唤执行者</b>
+  <p>点击 → 自动复制召唤语 → 跳转 Claude → 粘贴发送</p>
 </a>
 
 <!-- 地爻 · 进行中 -->
@@ -110,25 +122,25 @@ footer{text-align:center;color:var(--dim);font-size:11px;margin-top:30px;letter-
   </div>
 
   <a class="card" href="https://mail.google.com/mail/u/0/#search/from%3Adffh.vic.gov.au">
-    <div class="card-top"><i class="dot red"></i><b>DFFH 住房申请</b><span class="tag">最高优先</span></div>
+    <div class="card-top"><i class="dot red"></i><b>DFFH 住房申请</b><span class="tag">最高优先</span><span class="sym">↗</span></div>
     <p>等待回复 · Ref 7105846016 · 日雷達运行中(至7/24)</p>
     <div class="next">每早说「查DFFH」· 7/24无回复则致电 1300 650 172</div>
   </a>
 
   <a class="card" href="https://docs.google.com/document/d/13PhjNHT7Dw34IJtkhLpVomtz2m1kMrCPI4QnM47J46c/edit">
-    <div class="card-top"><i class="dot amber"></i><b>找房雷達</b><span class="tag">Gate A 8/31</span></div>
+    <div class="card-top"><i class="dot amber"></i><b>找房雷達</b><span class="tag">Gate A 8/31</span><span class="sym">↗</span></div>
     <p>≤$700/周 · 甜蜜区 $550–650 · 东南六区</p>
     <div class="next">基准房:11 Tenterfield Dr, Narre Warren South</div>
   </a>
 
   <a class="card" href="https://mail.google.com/mail/u/0/#search/from%3Aanglicarevic.org.au">
-    <div class="card-top"><i class="dot amber"></i><b>Jacob Freeman 跟进</b><span class="tag">Anglicare</span></div>
+    <div class="card-top"><i class="dot amber"></i><b>Jacob Freeman 跟进</b><span class="tag">Anglicare</span><span class="sym">↗</span></div>
     <p>①退租成本估算 ②租房申请支持信 · 待交付</p>
     <div class="next">需要时对 Claude 说「催Jacob」</div>
   </a>
 
   <a class="card" href="https://mail.google.com/mail/u/0/#search/whitehorse">
-    <div class="card-top"><i class="dot blue"></i><b>停车罚单复核</b><span class="tag">Whitehorse</span></div>
+    <div class="card-top"><i class="dot blue"></i><b>停车罚单复核</b><span class="tag">Whitehorse</span><span class="sym">↗</span></div>
     <p>6/29 已提交申诉 · 等待结果 · 7月底跟进</p>
   </a>
 
@@ -183,24 +195,34 @@ footer{text-align:center;color:var(--dim);font-size:11px;margin-top:30px;letter-
     <h2>启 · 应用</h2><small>已交付 · 点击进入</small>
   </div>
   <div class="apps">
-    <a class="app hero" href="https://mkroychan.github.io/meal-hub">
-      <span class="ico">🍱</span><b>Meal Hub 订餐</b>
-      <span>100菜品 · 选餐/库存/下单 · 运行中</span>
+    <a class="app hero" href="daily.html">
+      <span class="ico">📡</span><b>每日雷達</b>
+      <span>倒数 · 币价 · 今日必办 · 打开即最新</span>
+      <span class="sym">›</span>
+    </a>
+    <a class="app" href="https://mkroychan.github.io/meal-hub">
+      <span class="ico">🍱</span><b>Meal Hub 订餐</b><span>100菜品 · 运行中</span>
+      <span class="sym">↗</span>
     </a>
     <a class="app" href="https://mkroychan.github.io/meal-hub/pool.html">
       <span class="ico">⭐</span><b>选餐池</b><span>入池→配套→输出</span>
+      <span class="sym">↗</span>
     </a>
     <a class="app" href="https://docs.google.com/document/d/13PhjNHT7Dw34IJtkhLpVomtz2m1kMrCPI4QnM47J46c/edit">
       <span class="ico">📋</span><b>总控台文档</b><span>阅读版详情</span>
+      <span class="sym">↗</span>
     </a>
     <a class="app" href="https://drive.google.com/drive/folders/1qUyzPiZ5eDOzOo-WHyLFo3zJvy_-45lG">
       <span class="ico">🌉</span><b>共建工作区</b><span>Drive 文件</span>
+      <span class="sym">↗</span>
     </a>
     <a class="app" href="https://mail.google.com/">
       <span class="ico">📮</span><b>Gmail</b><span>邮件中心</span>
+      <span class="sym">↗</span>
     </a>
     <a class="app" href="https://claude.ai">
       <span class="ico">🤝</span><b>召唤 Claude</b><span>执行者待命</span>
+      <span class="sym">↗</span>
     </a>
   </div>
 </section>
@@ -209,7 +231,7 @@ footer{text-align:center;color:var(--dim);font-size:11px;margin-top:30px;letter-
 <section class="tier">
   <div class="tier-head">
     <div class="tier-mark" aria-hidden="true"><i class="b"></i><i></i></div>
-    <h2>令 · 触发语</h2><small>点一下复制 → 粘贴给 Claude</small>
+    <h2>令 · 触发语</h2><small>⧉ 点一下复制 → 粘贴给 Claude</small>
   </div>
   <div class="triggers">
     <div class="trg" data-t="查DFFH"><b>查DFFH</b><span>扫描住房申请回复</span></div>
@@ -223,7 +245,8 @@ footer{text-align:center;color:var(--dim);font-size:11px;margin-top:30px;letter-
   </div>
 </section>
 
-<footer>数据归己 · 借来的火 · MK ⇄ C · v1.2 · 2026-07-14</footer>
+<div class="legend">无符号＝看 &nbsp;·&nbsp; › ↗＝进 &nbsp;·&nbsp; 橙色＝做 &nbsp;·&nbsp; ⧉＝复制</div>
+<footer>数据归己 · 借来的火 · MK ⇄ C · v1.3 · 2026-07-22</footer>
 </div>
 
 <script>
@@ -232,12 +255,12 @@ const now = new Date();
 document.getElementById('today').textContent =
   (now.getMonth()+1)+'月'+now.getDate()+'日';
 
-// 倒数芯片(自动计算,无需维护)
+// 倒数芯片(① 看的:自动计算,无需维护)
 const marks = [
   {d:'2026-07-24', n:'DFFH 升级'},
   {d:'2026-08-31', n:'Gate A'},
   {d:'2026-10-01', n:'Gate B'},
-  {d:'2026-10-31', n:'租约到期'}
+  {d:'2026-10-20', n:'租约到期'}
 ];
 const box = document.getElementById('cds');
 marks.forEach(m=>{
@@ -249,7 +272,7 @@ marks.forEach(m=>{
   box.appendChild(el);
 });
 
-// 反馈升级闭环:复制召唤语 → 跳转 Claude
+// ③ 做的:反馈升级闭环(全页唯一橙色)
 document.getElementById('fbBtn').addEventListener('click', async (e)=>{
   e.preventDefault();
   const call='续接三才项目,我有反馈:';
@@ -264,7 +287,7 @@ document.getElementById('fbBtn').addEventListener('click', async (e)=>{
   setTimeout(()=>{ window.location.href='https://claude.ai'; }, 700);
 });
 
-// 触发语一键复制
+// ⧉ 触发语一键复制
 document.querySelectorAll('.trg').forEach(t=>{
   t.addEventListener('click', async ()=>{
     const txt = t.dataset.t;
