@@ -87,8 +87,20 @@ section{margin-bottom:22px}
 .sweep{width:20px;height:20px;border:2px solid rgba(255,247,236,.5);border-top-color:#FFF7EC;border-radius:50%;flex:none}
 .spinning .sweep{animation:sp .8s linear infinite}
 @keyframes sp{to{transform:rotate(360deg)}}
-.hublink{text-align:center;margin-top:26px}
-.hublink a{color:var(--dim);font-size:14px;text-decoration:none;border-bottom:1px solid var(--line);padding-bottom:2px}
+/* ── ② 進的:導航卡(› 同站 / ↗ 跳出) ── */
+a.chip{text-decoration:none;color:var(--paper)}
+.sym{margin-left:auto;color:var(--gold);font-size:21px;font-weight:700;flex:none;padding-left:10px}
+/* ── 語法圖例 ── */
+.legend{text-align:center;color:var(--dim);font-size:12.5px;letter-spacing:.06em;margin-top:20px}
+.hint{color:var(--dim);font-size:12.5px;margin:-4px 0 10px}
+/* ── 情報帶(① 看的:快照) ── */
+.intel{background:var(--panel);border:1px solid var(--line);border-radius:var(--r);padding:13px 14px;margin-bottom:8px}
+.intel .ch{font-weight:700;font-size:15px;margin-bottom:3px}
+.intel p{font-size:14px;color:#CBBFA9;line-height:1.5}
+.intel .stamp{color:var(--dim);font-size:11.5px;margin-top:5px}
+/* ── 刷新提示條 ── */
+#toast{position:fixed;left:16px;right:16px;bottom:96px;background:var(--panel2);border:1px solid var(--gold);border-radius:14px;padding:12px 14px;font-size:14px;text-align:center;opacity:0;pointer-events:none;transition:opacity .3s;z-index:9}
+#toast.on{opacity:1}
 @media (prefers-reduced-motion: reduce){.spinning .sweep{animation:none}}
 </style>
 </head>
@@ -112,14 +124,55 @@ section{margin-bottom:22px}
 
 <section>
   <div class="sec-t">今 日 必 辦</div>
+  <div class="hint">卡片可點 · 點一下＝打勾完成</div>
   <div class="todo" id="todo"></div>
 </section>
 
-<div class="hublink"><a href="index.html">🎛️ 回三才控制中心</a></div>
+<section>
+  <div class="sec-t">情 報 帶</div>
+  <div class="hint">三须道快照 · 想要當日最新 → 按「刷新情報」照提示辦</div>
+
+  <div class="intel">
+    <div class="ch">🧠 健康 / 腦神經</div>
+    <p>阿茲海默新突破:抑制腦內免疫細胞炎症,不清除斑塊也能恢復兩小時深睡。另:近4000人研究證實腦健康到90多歲仍可改善,70多歲學樂器護記憶——拉小提琴就是腦保健。</p>
+    <div class="stamp">快照 07/22</div>
+  </div>
+
+  <div class="intel">
+    <div class="ch">🤖 AI 與人機協作</div>
+    <p>Agent 進入生產元年:Gartner 預測年底40%企業應用內嵌 agent。五眼聯盟發布 Agentic AI 安全指南(分級授權+人類監督——與我們的 L1/L2/L3 協議同構)。Visa/Mastercard 開通 AI 代理支付。</p>
+    <div class="stamp">快照 07/22</div>
+  </div>
+
+  <div class="intel">
+    <div class="ch">🔬 前沿科技 · 感官修復</div>
+    <p>基因療法單針復聽已成真(特定基因型,數週見效)。USC 發現耳與眼共用同一組再生開關基因。臨床證實:治好感染牙,血糖膽固醇炎症全面改善——牙科檢查優先級應上調。</p>
+    <div class="stamp">快照 07/22</div>
+  </div>
+
+  <a class="chip" href="https://drive.google.com/drive/folders/1WSyjLJqcsH53F9DqUgLVw14UpT3JO0oy" target="_blank" rel="noopener">
+    <div>📜 完整簡報<small>Drive · 前沿雷達 · 含來源與細節</small></div><span class="sym">↗</span>
+  </a>
+</section>
+
+<section>
+  <div class="sec-t">進 一 步</div>
+  <div class="chips">
+    <a class="chip" href="index.html">
+      <div>🎛️ 三才控制中心<small>總覽全局 · 同站</small></div><span class="sym">›</span>
+    </a>
+    <a class="chip" href="https://drive.google.com/drive/folders/1qUyzPiZ5eDOzOo-WHyLFo3zJvy_-45lG" target="_blank" rel="noopener">
+      <div>📜 情報存檔<small>Drive 共建工作區 · 過去的情報住在這裡</small></div><span class="sym">↗</span>
+    </a>
+  </div>
+</section>
+
+<div class="legend">無符號＝看 &nbsp;·&nbsp; › ↗＝進 &nbsp;·&nbsp; 橙色＝做</div>
 
 <div class="dock">
   <button id="refresh"><span class="sweep"></span>刷新情報</button>
 </div>
+<div id="toast"></div>
 
 <script>
 /* ============ 設定(C 維護,狀態變化時出新版) ============ */
@@ -157,7 +210,7 @@ const wd=['日','一','二','三','四','五','六'];
   const now=new Date();
   const d=new Intl.DateTimeFormat('zh-TW',{timeZone:TZ,month:'long',day:'numeric'}).format(now);
   const w=wd[Number(new Intl.DateTimeFormat('en-US',{timeZone:TZ,weekday:'narrow',hour12:false}).formatToParts?new Date(new Date().toLocaleString('en-US',{timeZone:TZ})).getDay():now.getDay())];
-  document.getElementById('meta').innerHTML=`${d} · 週${w} &nbsp;|&nbsp; 更新 <b id="upt">—</b>`;
+  document.getElementById('meta').innerHTML=`${d} · 週${w} &nbsp;|&nbsp; 更新 <b id="upt">—</b> &nbsp;|&nbsp; v0.3`;
 })();
 function stamp(){
   const t=new Intl.DateTimeFormat('zh-TW',{timeZone:TZ,hour:'2-digit',minute:'2-digit',hour12:false}).format(new Date());
@@ -228,12 +281,23 @@ async function loadCoins(){
   }
 }
 
-/* ============ 刷新情報 ============ */
+/* ============ 刷新情報(③ 做的):拉活數據 + 複製情報觸發語 ============ */
 const btn=document.getElementById('refresh');
 btn.onclick=async()=>{
   btn.classList.add('spinning');
   document.getElementById('trigram').classList.remove('lit');
+  const call='掃描前沿雷達';
+  try{ await navigator.clipboard.writeText(call); }
+  catch(e){
+    const ta=document.createElement('textarea');
+    ta.value=call; document.body.appendChild(ta);
+    ta.select(); document.execCommand('copy'); ta.remove();
+  }
   await loadCoins();
+  const toast=document.getElementById('toast');
+  toast.innerHTML='✅ 幣價已更新 · 已複製「<b style="color:var(--gold)">掃描前沿雷達</b>」<br>想要今日新情報 → 貼給 Claude 即可';
+  toast.classList.add('on');
+  setTimeout(()=>toast.classList.remove('on'),5000);
   setTimeout(()=>btn.classList.remove('spinning'),500);
 };
 
