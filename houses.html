@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>🏠 找房雷達 · 看房清單</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@600;700&family=Noto+Sans+TC:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#16130F; --panel:#211D17; --panel2:#2A251D; --line:#3A332A;
+  --paper:#EDE6D8; --dim:#9E9484;
+  --fire:#E4762F; --gold:#D9A441; --jade:#57B283; --cinnabar:#D6544A;
+  --r:16px;
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+body{background:var(--ink);color:var(--paper);font-family:'Noto Sans TC',system-ui,sans-serif;
+  font-size:17px;line-height:1.55;max-width:520px;margin:0 auto;padding:20px 16px 40px}
+
+header{display:flex;align-items:center;gap:14px;margin-bottom:6px}
+.trigram{display:flex;flex-direction:column;gap:4px;width:34px;flex:none}
+.trigram i{height:5px;border-radius:2px;background:var(--fire)}
+.trigram i.mid{background:linear-gradient(90deg,var(--fire) 38%,transparent 38%,transparent 62%,var(--fire) 62%)}
+h1{font-family:'Noto Serif TC',serif;font-size:25px;font-weight:700;letter-spacing:.03em}
+.meta{color:var(--dim);font-size:13.5px;margin-bottom:6px}
+.phase{background:var(--panel);border:1px solid var(--gold);border-radius:var(--r);
+  padding:12px 14px;margin:12px 0 22px;font-size:14.5px}
+.phase b{color:var(--gold)}
+
+section{margin-bottom:24px}
+.sec-t{font-family:'Noto Serif TC',serif;font-size:15px;color:var(--gold);letter-spacing:.14em;
+  margin-bottom:10px;display:flex;align-items:center;gap:8px}
+.sec-t::after{content:"";flex:1;height:1px;background:var(--line)}
+
+/* 基準房 */
+.bench{background:linear-gradient(135deg,#2E2317,#211D17);border:1px solid #5A4222;
+  border-radius:var(--r);padding:14px}
+.bench .addr{font-weight:700;font-size:16px;margin-bottom:2px}
+.bench .price{color:var(--gold);font-family:'Noto Serif TC',serif;font-size:20px;font-weight:700}
+.bench p{font-size:13.5px;color:#CBBFA9;margin-top:6px}
+
+/* 房源卡 */
+.card{background:var(--panel);border:1px solid var(--line);border-radius:var(--r);
+  padding:14px;margin-bottom:9px}
+.card.top{border-color:#6B4A22}
+.row1{display:flex;align-items:baseline;gap:10px;margin-bottom:2px}
+.addr{font-weight:700;font-size:16px;flex:1;line-height:1.3}
+.price{font-family:'Noto Serif TC',serif;font-size:21px;font-weight:700;color:var(--gold);flex:none}
+.spec{color:var(--dim);font-size:13.5px;margin-bottom:8px}
+.bar{height:6px;background:#2F2921;border-radius:3px;overflow:hidden;margin-bottom:6px}
+.bar i{display:block;height:100%;background:linear-gradient(90deg,var(--gold),var(--fire));border-radius:3px}
+.sim{color:var(--gold);font-size:12.5px;font-weight:700}
+.note{font-size:13.5px;color:#CBBFA9;margin-top:4px}
+.star{color:var(--fire)}
+
+/* 行動清單 */
+.todo{display:flex;flex-direction:column;gap:8px}
+.item{display:flex;align-items:flex-start;gap:12px;background:var(--panel);
+  border:1px solid var(--line);border-radius:var(--r);padding:13px 14px;cursor:pointer;user-select:none}
+.box{width:26px;height:26px;border:2px solid var(--gold);border-radius:8px;flex:none;
+  display:flex;align-items:center;justify-content:center;font-size:16px;color:var(--ink);margin-top:1px}
+.done .box{background:var(--jade);border-color:var(--jade)}
+.done .txt{color:var(--dim);text-decoration:line-through}
+.txt small{display:block;color:var(--dim);font-size:12.5px}
+
+/* 檢查表 */
+.check{background:var(--panel);border:1px solid var(--line);border-radius:var(--r);padding:14px}
+.check li{list-style:none;font-size:14.5px;padding:5px 0 5px 20px;position:relative;color:#CBBFA9}
+.check li::before{content:"◇";position:absolute;left:0;color:var(--gold)}
+
+/* 模板 */
+.tpl{background:var(--panel2);border:1px solid var(--line);border-radius:var(--r);
+  padding:14px;font-size:14px;line-height:1.6;color:#CBBFA9}
+#copyBtn{display:block;width:100%;height:52px;margin-top:10px;border:none;border-radius:26px;
+  background:linear-gradient(135deg,var(--fire),#C2591E);color:#FFF7EC;
+  font-size:17px;font-weight:700;font-family:'Noto Sans TC',sans-serif;letter-spacing:.1em;cursor:pointer}
+#copyBtn:active{transform:scale(.985)}
+
+a.chip{display:flex;align-items:center;gap:12px;background:var(--panel);border:1px solid var(--line);
+  border-radius:var(--r);padding:13px 14px;text-decoration:none;color:var(--paper);margin-bottom:8px}
+a.chip small{display:block;color:var(--dim);font-size:12.5px}
+.sym{margin-left:auto;color:var(--gold);font-size:21px;font-weight:700;flex:none}
+.legend{text-align:center;color:var(--dim);font-size:12.5px;margin-top:22px}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="trigram"><i></i><i class="mid"></i><i></i></div>
+  <h1>找房雷達 · 看房清單</h1>
+</header>
+<div class="meta">第 1 輪 · 掃描 2026-07-22</div>
+
+<div class="phase">
+  現處 <b>第一階段「情報期」</b>(7/10–8/16)——<b>只看不投</b>。<br>
+  本輪任務:挑 2–3 套實地看房練手,熟悉流程、校準市場。<br>
+  下一決策點:<b>閘門 A · 8月31日</b>
+</div>
+
+<section>
+  <div class="sec-t">⭐ 基 準 房</div>
+  <div class="bench">
+    <div class="addr">11 Tenterfield Drive, Narre Warren South</div>
+    <div class="price">$700<span style="font-size:14px;color:var(--dim)">/週</span></div>
+    <p>4房 · 2浴 · 2車庫 · 3起居區 · study · spa主臥 · 900mm灶+洗碗機+石材檯面 · ducted heating + evaporative cooling · alfresco</p>
+    <p style="color:var(--dim)">女兒挑選 · 所有房源以此為對比錨點<br>OSKO Real Estate · Maha Asif · 0497 213 887</p>
+  </div>
+</section>
+
+<section>
+  <div class="sec-t">A 級 · 優 先 看</div>
+
+  <div class="card top">
+    <div class="row1"><div class="addr">7 County Drive<br><span style="font-size:13.5px;font-weight:400;color:var(--dim)">Berwick</span></div><div class="price">$630</div></div>
+    <div class="spec">4房 · 2衛 · 3車 · 512㎡</div>
+    <div class="bar"><i style="width:85%"></i></div>
+    <div class="sim">相似度 ~85% · 本輪最貼近基準</div>
+    <div class="note">車位 3 個超出基準,地塊大</div>
+  </div>
+
+  <div class="card top">
+    <div class="row1"><div class="addr">10 Earlwood St<br><span style="font-size:13.5px;font-weight:400;color:var(--dim)">Narre Warren South</span></div><div class="price">$550</div></div>
+    <div class="spec">4房 · 2衛 · 1車</div>
+    <div class="bar"><i style="width:80%"></i></div>
+    <div class="sim">相似度 ~80%</div>
+    <div class="note"><span class="star">★</span> 唯一在目標主區內 · 價格貼地板 · 車位少 1<br><b style="color:var(--cinnabar)">7月7日已掛,至今未租出 — 值得去查原因</b></div>
+  </div>
+
+  <div class="card">
+    <div class="row1"><div class="addr">6 Catalonia Way<br><span style="font-size:13.5px;font-weight:400;color:var(--dim)">Berwick</span></div><div class="price">$650</div></div>
+    <div class="spec">4房 · 2衛 · 2車</div>
+    <div class="bar"><i style="width:78%"></i></div>
+    <div class="sim">相似度 ~78%</div>
+    <div class="note">標配對版 · Berwick 學區與商圈成熟</div>
+  </div>
+
+  <div class="card">
+    <div class="row1"><div class="addr">6 Kooyong Close<br><span style="font-size:13.5px;font-weight:400;color:var(--dim)">Hampton Park</span></div><div class="price">$650</div></div>
+    <div class="spec">4房 · 2衛 · 2車</div>
+    <div class="bar"><i style="width:75%"></i></div>
+    <div class="sim">相似度 ~75%</div>
+    <div class="note">屬閘門 B 擴區,可提前踩點</div>
+  </div>
+
+  <div class="card">
+    <div class="row1"><div class="addr">53 Yeungroon Blvd<br><span style="font-size:13.5px;font-weight:400;color:var(--dim)">Clyde North</span></div><div class="price">$610</div></div>
+    <div class="spec">4房 · 2衛 · 2車</div>
+    <div class="bar"><i style="width:75%"></i></div>
+    <div class="sim">相似度 ~75%</div>
+    <div class="note">新區 · 房齡通常較新</div>
+  </div>
+</section>
+
+<section>
+  <div class="sec-t">B 級 · 性 價 比 洼 地</div>
+
+  <div class="card">
+    <div class="row1"><div class="addr">4 Bremer St<br><span style="font-size:13.5px;font-weight:400;color:var(--dim)">Clyde North</span></div><div class="price">$590</div></div>
+    <div class="spec">4房 · 2衛 · 3車</div>
+    <div class="bar"><i style="width:78%"></i></div>
+    <div class="sim">相似度 ~78%</div>
+    <div class="note">比基準便宜 $110/週 = <b style="color:var(--jade)">年省 $5,720</b></div>
+  </div>
+
+  <div class="card">
+    <div class="row1"><div class="addr">9 Monstera St<br><span style="font-size:13.5px;font-weight:400;color:var(--dim)">Clyde North</span></div><div class="price">$590</div></div>
+    <div class="spec">4房 · 2衛 · 2車</div>
+    <div class="bar"><i style="width:75%"></i></div>
+    <div class="sim">相似度 ~75%</div>
+  </div>
+
+  <div class="card">
+    <div class="row1"><div class="addr">31A Wren St<br><span style="font-size:13.5px;font-weight:400;color:var(--dim)">Hampton Park</span></div><div class="price">$590</div></div>
+    <div class="spec">4房 · 2衛 · 2車</div>
+    <div class="bar"><i style="width:72%"></i></div>
+    <div class="sim">相似度 ~72%</div>
+    <div class="note">曾以 $650 出租,現價下修</div>
+  </div>
+</section>
+
+<section>
+  <div class="sec-t">本 輪 判 斷</div>
+  <div class="check">
+    <li><b>供給充足,不必妥協到 3 房</b> — 甜蜜區內 4房/2衛/2車 標配盤密集</li>
+    <li><b>Clyde North 是本輪洼地</b> — 多套 $590 的 4 房</li>
+    <li><b>主區租盤稀少</b> — Narre Warren South 僅 1 套;量池在 Berwick / Clyde North / Hampton Park</li>
+    <li><b>找租盤只用三站</b> — realestate.com.au · domain.com.au · view.com.au(其餘是估價站,租賃資訊滯後)</li>
+  </div>
+</section>
+
+<section>
+  <div class="sec-t">本 階 段 行 動</div>
+  <div class="hint" style="color:var(--dim);font-size:12.5px;margin-bottom:10px">點一下＝打勾完成</div>
+  <div class="todo" id="todo">
+    <div class="item"><div class="box"></div><div class="txt">約看 7 County Drive, Berwick<small>最貼近基準</small></div></div>
+    <div class="item"><div class="box"></div><div class="txt">約看 10 Earlwood St, NWS<small>主區唯一 + 查久掛原因</small></div></div>
+    <div class="item"><div class="box"></div><div class="txt">約看 4 Bremer St, Clyde North<small>洼地代表</small></div></div>
+    <div class="item"><div class="box"></div><div class="txt">記錄各房上架→出租天數<small>校準市場真實速度</small></div></div>
+    <div class="item"><div class="box"></div><div class="txt">催 Jacob 拿 lease break 成本 + 支持信<small>閘門 A 算帳需要這個數字</small></div></div>
+  </div>
+</section>
+
+<section>
+  <div class="sec-t">看 房 必 查</div>
+  <div class="check">
+    <li>起居區數量(基準 3 個)</li>
+    <li>有無 study 書房</li>
+    <li>暖氣是否 ducted</li>
+    <li>廚房檯面材質與灶具尺寸</li>
+    <li>車庫能否從室內進出</li>
+    <li>有無 alfresco 戶外區</li>
+    <li>主臥有無 walk-in robe</li>
+    <li>看房時段爭取 12:00–2:30</li>
+  </div>
+</section>
+
+<section>
+  <div class="sec-t">詢 問 中 介</div>
+  <div class="tpl" id="tpl">Hi, I'm interested in the property at [ADDRESS]. Could you please let me know the next inspection time, the available date, and whether the lease start date has any flexibility into early October? I'm a long-term tenant with a clean rental history and can provide references. Thank you.</div>
+  <button id="copyBtn">複製詢問模板</button>
+</section>
+
+<section>
+  <div class="sec-t">進 一 步</div>
+  <a class="chip" href="daily.html"><div>📡 每日雷達<small>倒數 · 幣價 · 情報帶</small></div><span class="sym">›</span></a>
+  <a class="chip" href="index.html"><div>🎛️ 三才控制中心<small>總覽全局</small></div><span class="sym">›</span></a>
+</section>
+
+<div class="legend">無符號＝看 · › ↗＝進 · 橙色＝做</div>
+
+<script>
+// 打勾(存本地)
+const KEY='sancai_house_r1';
+let done=new Set((localStorage.getItem(KEY)||'').split(',').filter(Boolean));
+document.querySelectorAll('#todo .item').forEach((el,i)=>{
+  const id='t'+i;
+  if(done.has(id)){el.classList.add('done');el.querySelector('.box').textContent='✓';}
+  el.onclick=()=>{
+    el.classList.toggle('done');
+    const on=el.classList.contains('done');
+    el.querySelector('.box').textContent=on?'✓':'';
+    on?done.add(id):done.delete(id);
+    try{localStorage.setItem(KEY,[...done].join(','))}catch(e){}
+  };
+});
+// 複製模板
+document.getElementById('copyBtn').onclick=async function(){
+  const t=document.getElementById('tpl').textContent;
+  try{await navigator.clipboard.writeText(t)}
+  catch(e){const ta=document.createElement('textarea');ta.value=t;document.body.appendChild(ta);ta.select();document.execCommand('copy');ta.remove()}
+  this.textContent='✓ 已複製 · 貼給中介即可';
+  setTimeout(()=>this.textContent='複製詢問模板',2200);
+};
+</script>
+</body>
+</html>
