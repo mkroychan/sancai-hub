@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>📋 VARC 備料清單 · 三人版</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@600;700&family=Noto+Sans+TC:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#16130F;--panel:#211D17;--panel2:#2A251D;--line:#3A332A;
+  --paper:#EDE6D8;--dim:#9E9484;
+  --fire:#E4762F;--gold:#D9A441;--jade:#57B283;--cinnabar:#D6544A;--sky:#6CA0DC;--r:16px;
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+body{background:var(--ink);color:var(--paper);font-family:'Noto Sans TC',system-ui,sans-serif;
+  font-size:17px;line-height:1.55;max-width:520px;margin:0 auto;padding:20px 16px 40px}
+header{display:flex;align-items:center;gap:14px;margin-bottom:6px}
+.trigram{display:flex;flex-direction:column;gap:4px;width:34px;flex:none}
+.trigram i{height:5px;border-radius:2px;background:var(--fire)}
+.trigram i.mid{background:linear-gradient(90deg,var(--fire) 38%,transparent 38%,transparent 62%,var(--fire) 62%)}
+h1{font-family:'Noto Serif TC',serif;font-size:23px;font-weight:700}
+.meta{color:var(--dim);font-size:13.5px;margin-bottom:14px}
+
+/* 警示條 */
+.alarm{background:linear-gradient(135deg,#3A1E18,#2A1815);border:1px solid var(--cinnabar);
+  border-radius:var(--r);padding:15px;margin-bottom:14px}
+.alarm .big{font-family:'Noto Serif TC',serif;font-size:19px;color:var(--cinnabar);font-weight:700;margin-bottom:5px}
+.alarm p{font-size:14px;color:#D9C9B8}
+
+.intro{background:var(--panel);border:1px solid var(--line);border-radius:var(--r);padding:14px;font-size:14.5px;color:#CBBFA9;margin-bottom:20px}
+.intro b{color:var(--gold)}
+
+/* 進度 */
+.prog{background:var(--panel);border:1px solid var(--line);border-radius:var(--r);padding:13px 15px;margin-bottom:18px;display:flex;align-items:center;gap:12px}
+.prog .n{font-family:'Noto Serif TC',serif;font-size:26px;color:var(--gold);font-weight:700;flex:none}
+.prog .bar{flex:1;height:8px;background:#2F2921;border-radius:4px;overflow:hidden}
+.prog .bar i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--gold),var(--jade));border-radius:4px;transition:width .3s}
+.prog small{color:var(--dim);font-size:12px;display:block}
+
+section{margin-bottom:24px}
+.sec-t{font-family:'Noto Serif TC',serif;font-size:15px;color:var(--gold);letter-spacing:.14em;
+  margin-bottom:6px;display:flex;align-items:center;gap:8px}
+.sec-t::after{content:"";flex:1;height:1px;background:var(--line)}
+.sec-n{color:var(--dim);font-size:12.5px;margin-bottom:10px}
+
+/* 清單項 */
+.item{display:flex;align-items:flex-start;gap:12px;background:var(--panel);
+  border:1px solid var(--line);border-radius:var(--r);padding:13px 14px;cursor:pointer;
+  user-select:none;-webkit-user-select:none;margin-bottom:8px}
+.item:active{background:var(--panel2)}
+.box{width:26px;height:26px;border:2px solid var(--gold);border-radius:8px;flex:none;
+  display:flex;align-items:center;justify-content:center;font-size:16px;color:var(--ink);margin-top:1px}
+.done .box{background:var(--jade);border-color:var(--jade)}
+.done .txt b{color:var(--dim);text-decoration:line-through}
+.txt{flex:1}
+.txt b{font-size:15.5px;font-weight:700;display:block}
+.txt small{display:block;color:var(--dim);font-size:12.5px;margin-top:2px;line-height:1.45}
+.who{display:inline-block;font-size:10.5px;font-weight:700;padding:1px 7px;border-radius:20px;margin-left:6px;vertical-align:1px}
+.w-all{background:rgba(217,164,65,.16);color:var(--gold)}
+.w-mk{background:rgba(108,160,220,.16);color:var(--sky)}
+.w-mei{background:rgba(87,178,131,.16);color:var(--jade)}
+.w-dau{background:rgba(228,118,47,.16);color:var(--fire)}
+
+.note{background:var(--panel);border:1px dashed var(--line);border-radius:var(--r);
+  padding:13px 14px;font-size:13.5px;color:#CBBFA9;margin-bottom:9px}
+.note b{color:var(--gold)}
+
+.steps{background:var(--panel);border:1px solid var(--line);border-radius:var(--r);padding:14px}
+.steps li{list-style:none;font-size:14.5px;padding:7px 0 7px 28px;position:relative;color:#CBBFA9;line-height:1.5}
+.steps li b{color:var(--paper)}
+.steps li .num{position:absolute;left:0;top:7px;width:20px;height:20px;border-radius:50%;
+  background:var(--gold);color:var(--ink);font-size:12px;font-weight:700;
+  display:flex;align-items:center;justify-content:center}
+
+a.chip{display:flex;align-items:center;gap:12px;background:var(--panel);border:1px solid var(--line);
+  border-radius:var(--r);padding:13px 14px;text-decoration:none;color:var(--paper);margin-bottom:8px}
+a.chip small{display:block;color:var(--dim);font-size:12.5px}
+a.chip.hot{border-color:#6B4A22;background:linear-gradient(135deg,#2E2317,#211D17)}
+.sym{margin-left:auto;color:var(--gold);font-size:21px;font-weight:700;flex:none}
+#resetBtn{display:block;width:100%;padding:12px;margin-top:10px;background:none;
+  border:1px dashed var(--line);border-radius:var(--r);color:var(--dim);font-size:13px;
+  font-family:'Noto Sans TC',sans-serif;cursor:pointer}
+.legend{text-align:center;color:var(--dim);font-size:12.5px;margin-top:22px}
+.disc{color:var(--dim);font-size:12px;text-align:center;margin-top:12px;line-height:1.5}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="trigram"><i></i><i class="mid"></i><i></i></div>
+  <h1>VARC 備料清單</h1>
+</header>
+<div class="meta">三人同住版 · Homes Victoria 可負擔住房</div>
+
+<div class="alarm">
+  <div class="big">⏱ 中籤後只有 2 天</div>
+  <p>抽中後必須在 <b>48 小時內</b>交齊全部文件,逾期作廩。<br>
+  這就是為什麼要<b>現在先備好</b>——中籤那刻只需上傳,不必到處找。</p>
+</div>
+
+<div class="intro">
+  VARC 是<b>抽籤制</b>,不是先到先得。合格者隨機抽取,機會均等。<br>
+  策略:<b>備好料 → 多申請幾套 → 持續申請</b>。備料一次,可用於所有申請。
+</div>
+
+<div class="prog">
+  <div class="n" id="pn">0</div>
+  <div style="flex:1">
+    <div class="bar"><i id="pbar"></i></div>
+    <small id="ptxt">共 13 項 · 點一下打勾</small>
+  </div>
+</div>
+
+<section>
+  <div class="sec-t">① 收 入 證 明</div>
+  <div class="sec-n">三人全部都要 · 這是資格核心</div>
+  <div class="item"><div class="box"></div><div class="txt">
+    <b>MK 收入證明<span class="who w-mk">你</span></b>
+    <small>近期工資單 + 最新 ATO Notice of Assessment(稅單)</small></div></div>
+  <div class="item"><div class="box"></div><div class="txt">
+    <b>Mei Yang 工資單<span class="who w-mei">Mei</span></b>
+    <small>兼職浮動收入 → 建議備<b>近 8–12 週</b>工資單,或去年整年稅單,證明可持續性</small></div></div>
+  <div class="item"><div class="box"></div><div class="txt">
+    <b>女兒收入證明<span class="who w-dau">女兒</span></b>
+    <small>工資單 + 稅單 · 她是三人戶收入主力,必須齊全</small></div></div>
+  <div class="item"><div class="box"></div><div class="txt">
+    <b>Centrelink 收入報表(如有)<span class="who w-all">全戶</span></b>
+    <small>任何政府補助都算收入,要一併申報</small></div></div>
+</section>
+
+<section>
+  <div class="sec-t">② 身 份 · 100 分</div>
+  <div class="sec-n">澳洲 100-point ID · 三人各自都要湊夠</div>
+  <div class="item"><div class="box"></div><div class="txt">
+    <b>護照<span class="who w-all">三人</span></b>
+    <small>通常 70 分 · 最有效的單張文件</small></div></div>
+  <div class="item"><div class="box"></div><div class="txt">
+    <b>駕照 / Keypass<span class="who w-all">三人</span></b>
+    <small>通常 40 分 · 加護照即滿 100</small></div></div>
+  <div class="item"><div class="box"></div><div class="txt">
+    <b>Medicare 卡 / 銀行卡 / 水電賬單<span class="who w-all">三人</span></b>
+    <small>補分用 · 每張約 25 分 · 多備幾張保險</small></div></div>
+</section>
+
+<section>
+  <div class="sec-t">③ 居 民 身 份</div>
+  <div class="sec-n">三人都要證明公民/PR + 現居維州</div>
+  <div class="item"><div class="box"></div><div class="txt">
+    <b>公民證 / PR 簽證證明<span class="who w-all">三人</span></b>
+    <small>VEVO 線上查詢結果截圖亦可</small></div></div>
+  <div class="item"><div class="box"></div><div class="txt">
+    <b>維州居住證明<span class="who w-all">三人</span></b>
+    <small>現址水電賬單 / 銀行對賬單 / 駕照地址</small></div></div>
+</section>
+
+<section>
+  <div class="sec-t">④ 無 房 產 聲 明</div>
+  <div class="sec-n">全戶成員均不得擁有住宅或商業房產</div>
+  <div class="item"><div class="box"></div><div class="txt">
+    <b>無房產聲明<span class="who w-all">三人</span></b>
+    <small>通常為申請表內聲明欄 · 三人都要簽</small></div></div>
+  <div class="item"><div class="box"></div><div class="txt">
+    <b>⚠️ Fly High 股權要先想清楚<span class="who w-mk">你</span></b>
+    <small>你持 Fly High 20% 股份 — 這是<b>公司股權,非房產</b>,規則問的是「住宅或商業房產」。但若該公司名下持有物業,可能需說明。<b>建議如實申報並附會計師信</b>,別隱瞞</small></div></div>
+</section>
+
+<section>
+  <div class="sec-t">⑤ 推 薦 人</div>
+  <div class="sec-n">證明良好租賃史</div>
+  <div class="item"><div class="box"></div><div class="txt">
+    <b>現任房東 / 中介聯絡方式<span class="who w-mk">你</span></b>
+    <small>姓名 · 電話 · Email · 你在現址長租,這是強項</small></div></div>
+  <div class="item"><div class="box"></div><div class="txt">
+    <b>租金繳付紀錄<span class="who w-mk">你</span></b>
+    <small>銀行轉賬紀錄或中介 ledger · 證明從無欠租</small></div></div>
+</section>
+
+<section>
+  <div class="sec-t">⑥ 中 籤 後 錢 款</div>
+  <div class="sec-n">接受房子時當場要付</div>
+  <div class="item"><div class="box"></div><div class="txt">
+    <b>預備 2 週租金 + Bond<span class="who w-all">全戶</span></b>
+    <small>Bond 通常為 1 個月租金 · 以 $600/週估算,合計約 <b>$3,800</b> 要能即時拿出</small></div></div>
+</section>
+
+<button id="resetBtn">重置全部勾選</button>
+
+<section style="margin-top:26px">
+  <div class="sec-t">申 請 四 步</div>
+  <div class="steps">
+    <li><span class="num">1</span><b>線上申請</b> — 在 VARc Snug portal 看房並申請,進入該房抽籤池。<b>必須填入三人全部資料</b>,即使只是部分時間住</li>
+    <li><span class="num">2</span><b>驗證</b> — 中籤後 <b>2 天內</b>交齊上面全部文件</li>
+    <li><span class="num">3</span><b>看房</b> — 簽約前可看房,時間公佈在 portal</li>
+    <li><span class="num">4</span><b>入住</b> — 簽租約 · 付 2 週租金 · 付 bond</li>
+  </div>
+</section>
+
+<section>
+  <div class="sec-t">關 鍵 提 醒</div>
+  <div class="note"><b>三人全填,不可省。</b>規則明確要求填入所有居住者,連部分時間住的也算。這正是三人方案的誠信基礎——系統本就這樣設計。</div>
+  <div class="note"><b>抽籤 = 要多投。</b>單套中籤率不高,備好料後<b>見合適的就申請</b>,持續投,不要只押一套。</div>
+  <div class="note"><b>備料一次,重複使用。</b>所有申請共用同一套材料,備齊後每次申請幾乎零成本。</div>
+  <div class="note"><b>建議存放:</b>Drive 開一個「VARC備料」資料夾,三人的文件全部掃描存入,中籤時直接上傳。</div>
+</section>
+
+<section>
+  <div class="sec-t">下 一 步</div>
+  <a class="chip hot" href="https://app.snug.com/" target="_blank" rel="noopener">
+    <div>🔑 註冊 VARc Snug Portal<small>唯一需要 MK 本人做 · 註冊後才看得到當前房源</small></div><span class="sym">↗</span></a>
+  <a class="chip" href="https://www.homes.vic.gov.au/homes-victoria-affordable-how-apply" target="_blank" rel="noopener">
+    <div>📄 官方申請說明<small>Homes Victoria 原文</small></div><span class="sym">↗</span></a>
+  <a class="chip" href="housing.html"><div>🏘️ 可負擔住房 · 渠道清單<small>五條路對照</small></div><span class="sym">›</span></a>
+  <a class="chip" href="index.html"><div>🎛️ 三才控制中心<small>總覽全局</small></div><span class="sym">›</span></a>
+</section>
+
+<div class="legend">無符號＝看 · ↗＝去官網 · › ＝站內 · 點清單＝打勾</div>
+<div class="disc">本頁依 Homes Victoria 官方公開說明整理,非持牌住房顧問意見。100-point ID 分值與實際所需文件以官方要求為準。金額為估算。</div>
+
+<script>
+const KEY='sancai_varc_docs';
+let done=new Set((localStorage.getItem(KEY)||'').split(',').filter(Boolean));
+const items=document.querySelectorAll('.item');
+function refresh(){
+  const n=done.size,t=items.length;
+  document.getElementById('pn').textContent=n;
+  document.getElementById('pbar').style.width=(n/t*100)+'%';
+  document.getElementById('ptxt').textContent = n===t ? '✓ 全部備齊 — 中籤即可上傳' : ('共 '+t+' 項 · 還差 '+(t-n)+' 項');
+}
+items.forEach((el,i)=>{
+  const id='d'+i;
+  if(done.has(id)){el.classList.add('done');el.querySelector('.box').textContent='✓';}
+  el.onclick=()=>{
+    el.classList.toggle('done');
+    const on=el.classList.contains('done');
+    el.querySelector('.box').textContent=on?'✓':'';
+    on?done.add(id):done.delete(id);
+    try{localStorage.setItem(KEY,[...done].join(','))}catch(e){}
+    refresh();
+  };
+});
+document.getElementById('resetBtn').onclick=function(){
+  done.clear();
+  items.forEach(el=>{el.classList.remove('done');el.querySelector('.box').textContent='';});
+  try{localStorage.setItem(KEY,'')}catch(e){}
+  refresh();
+};
+refresh();
+</script>
+</body>
+</html>
