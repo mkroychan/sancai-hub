@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>📤 退租通知 · Notice to Vacate</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@600;700&family=Noto+Sans+TC:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#16130F;--panel:#211D17;--panel2:#2A251D;--line:#3A332A;
+  --paper:#EDE6D8;--dim:#9E9484;
+  --fire:#E4762F;--gold:#D9A441;--jade:#57B283;--cinnabar:#D6544A;--sky:#6CA0DC;--r:16px;
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+body{background:var(--ink);color:var(--paper);font-family:'Noto Sans TC',system-ui,sans-serif;
+  font-size:17px;line-height:1.55;max-width:520px;margin:0 auto;padding:20px 16px 40px}
+header{display:flex;align-items:center;gap:14px;margin-bottom:6px}
+.trigram{display:flex;flex-direction:column;gap:4px;width:34px;flex:none}
+.trigram i{height:5px;border-radius:2px;background:var(--fire)}
+.trigram i.mid{background:linear-gradient(90deg,var(--fire) 38%,transparent 38%,transparent 62%,var(--fire) 62%)}
+h1{font-family:'Noto Serif TC',serif;font-size:23px;font-weight:700}
+.meta{color:var(--dim);font-size:13.5px;margin-bottom:14px}
+
+.alarm{background:linear-gradient(135deg,#3A1E18,#2A1815);border:1px solid var(--cinnabar);
+  border-radius:var(--r);padding:15px;margin-bottom:16px}
+.alarm .big{font-family:'Noto Serif TC',serif;font-size:19px;color:var(--cinnabar);font-weight:700;margin-bottom:5px}
+.alarm p{font-size:14px;color:#D9C9B8}
+#cd{font-size:15px;color:var(--gold);font-weight:700;margin-top:6px}
+
+section{margin-bottom:24px}
+.sec-t{font-family:'Noto Serif TC',serif;font-size:15px;color:var(--gold);letter-spacing:.14em;
+  margin-bottom:6px;display:flex;align-items:center;gap:8px}
+.sec-t::after{content:"";flex:1;height:1px;background:var(--line)}
+.sec-n{color:var(--dim);font-size:12.5px;margin-bottom:10px}
+
+/* 时间线 */
+.tl{background:var(--panel);border:1px solid var(--line);border-radius:var(--r);padding:6px 14px 12px}
+.tl .row{display:flex;gap:12px;padding:11px 0;border-bottom:1px solid var(--line)}
+.tl .row:last-child{border-bottom:none}
+.tl .d{flex:none;width:62px;font-family:'Noto Serif TC',serif;font-size:15px;color:var(--gold);font-weight:700}
+.tl .c b{font-size:15px;display:block}
+.tl .c small{color:var(--dim);font-size:12.5px;display:block;line-height:1.45;margin-top:1px}
+.tl .row.hot .d{color:var(--cinnabar)}
+
+/* 事实 */
+.fact{background:var(--panel);border:1px solid var(--line);border-radius:var(--r);padding:14px}
+.fact li{list-style:none;font-size:14.5px;padding:6px 0 6px 22px;position:relative;color:#CBBFA9;line-height:1.5}
+.fact li::before{content:"◇";position:absolute;left:0;color:var(--gold)}
+.fact li b{color:var(--paper)}
+
+.note{background:var(--panel);border:1px dashed var(--line);border-radius:var(--r);
+  padding:13px 14px;font-size:13.5px;color:#CBBFA9;margin-bottom:9px}
+.note b{color:var(--gold)}
+.note.warn{border-color:var(--cinnabar)}
+.note.warn b{color:var(--cinnabar)}
+
+/* 模板 */
+.tpl{background:var(--panel2);border:1px solid var(--line);border-radius:var(--r);
+  padding:14px;font-size:14px;line-height:1.65;color:#CBBFA9;white-space:pre-wrap}
+.tpl .fill{color:var(--gold);font-weight:700}
+button.copy{display:block;width:100%;height:52px;margin-top:10px;border:none;border-radius:26px;
+  background:linear-gradient(135deg,var(--fire),#C2591E);color:#FFF7EC;
+  font-size:17px;font-weight:700;font-family:'Noto Sans TC',sans-serif;letter-spacing:.1em;cursor:pointer}
+button.copy:active{transform:scale(.985)}
+
+/* 重叠计算 */
+.calc{background:linear-gradient(135deg,#2E2317,#211D17);border:1px solid #5A4222;border-radius:var(--r);padding:14px}
+.calc table{width:100%;font-size:14.5px;border-collapse:collapse}
+.calc td{padding:4px 0}
+.calc td:last-child{text-align:right;font-variant-numeric:tabular-nums}
+.calc .good{color:var(--jade);font-weight:700}
+.calc .bad{color:var(--cinnabar);font-weight:700}
+
+a.chip{display:flex;align-items:center;gap:12px;background:var(--panel);border:1px solid var(--line);
+  border-radius:var(--r);padding:13px 14px;text-decoration:none;color:var(--paper);margin-bottom:8px}
+a.chip small{display:block;color:var(--dim);font-size:12.5px}
+.sym{margin-left:auto;color:var(--gold);font-size:21px;font-weight:700;flex:none}
+.legend{text-align:center;color:var(--dim);font-size:12.5px;margin-top:22px}
+.disc{color:var(--dim);font-size:12px;text-align:center;margin-top:12px;line-height:1.5}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="trigram"><i></i><i class="mid"></i><i></i></div>
+  <h1>退租通知</h1>
+</header>
+<div class="meta">Notice of Intention to Vacate · JRW Property Management</div>
+
+<div class="alarm">
+  <div class="big">⏱ 9月22日前必須發出</div>
+  <p>固定租期 <b>2026-10-20</b> 到期 · 維州規定需提前 <b>28 天</b>書面通知。<br>
+  中介已明確:先前那封只是詢問,<b>不算正式通知</b>。</p>
+  <div id="cd"></div>
+</div>
+
+<section>
+  <div class="sec-t">中 介 已 說 明</div>
+  <div class="sec-n">Phoebe Qi · 0449 686 878 · JRW Rentals</div>
+  <div class="fact">
+    <li><b>最早退租日 = 固定租期結束日</b>(10/20),不能提前無責退租</li>
+    <li>想提前走 → 可提前招租,但<b>租金要付到「新租客入住」或「租約結束」較早者</b> — 空窗風險全在你</li>
+    <li>先前郵件<b>只是詢問</b>,不是正式 Notice of Intention to Vacate</li>
+    <li>要求:確定日期後盡早通知,並給足通知期</li>
+  </div>
+</section>
+
+<section>
+  <div class="sec-t">時 間 線</div>
+  <div class="tl">
+    <div class="row">
+      <div class="d">8月底</div>
+      <div class="c"><b>Gate A · 準備就緒</b>
+      <small>材料齊、Jacob 支持信、預算確認 — <b>不是</b>出手點</small></div>
+    </div>
+    <div class="row">
+      <div class="d">8月中</div>
+      <div class="c"><b>房源湧出 · 實際看房</b>
+      <small>中介通常提前 3–4 週掛牌 → 10月入住的房這時才上架</small></div>
+    </div>
+    <div class="row hot">
+      <div class="d">9/22</div>
+      <div class="c"><b>退租通知截止</b>
+      <small>28天通知期倒推 · 找到新房確認入住日後<b>立即發</b></small></div>
+    </div>
+    <div class="row">
+      <div class="d">10/15<br>–10/20</div>
+      <div class="c"><b>理想新房入住窗口</b>
+      <small>留 2–5 天搬家緩衝 · 越貼近 10/20 越省</small></div>
+    </div>
+    <div class="row hot">
+      <div class="d">10/20</div>
+      <div class="c"><b>舊租約結束 · 交房</b>
+      <small>租金必須付到這天,不論你何時搬走</small></div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="sec-t">雙 邊 重 疊 成 本</div>
+  <div class="sec-n">舊房租金付到 10/20 是固定的 · 新房越早入住,重疊越多</div>
+  <div class="calc">
+    <table>
+      <tr><td>新房 10/18 入住</td><td class="good">重疊 2 天 ≈ $170</td></tr>
+      <tr><td>新房 10/15 入住</td><td class="good">重疊 5 天 ≈ $430</td></tr>
+      <tr><td>新房 10/01 入住</td><td>重疊 19 天 ≈ $1,630</td></tr>
+      <tr><td>新房 09/15 入住</td><td class="bad">重疊 35 天 ≈ $3,000</td></tr>
+    </table>
+    <div style="color:var(--dim);font-size:12px;margin-top:8px">※ 以新房 $620/週估算 · 舊房租金另計</div>
+  </div>
+</section>
+
+<section>
+  <div class="sec-t">找 房 硬 條 件</div>
+  <div class="note warn">
+    <b>Available date 落在 10 月中下旬</b> — 這比價格、房型都優先。<br>
+    一套 $580 的完美 4 房,若寫著 <b>Available Now</b>,對你就是廢的:中介要馬上出租,等不到 10 月。
+  </div>
+  <div class="note">
+    <b>出手窗口 = 9月中 – 10月刜</b>,不是 8/31。Gate A 只是「準備就緒」檢查點。
+  </div>
+</section>
+
+<section>
+  <div class="sec-t">正 式 通 知 模 板</div>
+  <div class="sec-n">確定入住日後填入日期 → 複製 → 發給 Phoebe Qi</div>
+  <div class="tpl" id="tpl">Subject: Notice of Intention to Vacate — [PROPERTY ADDRESS]
+
+Dear Phoebe,
+
+I am writing to give formal Notice of Intention to Vacate the premises at [PROPERTY ADDRESS].
+
+My fixed-term lease ends on 20 October 2026, and I confirm that I will be vacating the property on that date. I do not intend to renew the lease.
+
+I understand rent is payable up to and including the lease end date, and I will ensure the property is left clean and in good condition.
+
+Please confirm receipt of this notice in writing, and let me know:
+1. The final inspection date and time
+2. The process and timeframe for the bond refund
+3. Any specific requirements for the handover of keys
+
+Thank you for your assistance during the tenancy.
+
+Kind regards,
+Min Kwan Chan
+[PHONE]
+[DATE]</div>
+  <button class="copy" id="copyBtn">複製通知模板</button>
+  <div class="note" style="margin-top:12px"><b>發出後務必:</b>確認 Sent 文件夾有紀錄,並要求書面回執。<br><b>送達以 Sent/回執為準,不以印象為準。</b></div>
+</section>
+
+<section>
+  <div class="sec-t">進 一 步</div>
+  <a class="chip" href="houses.html"><div>🏠 找房雷達 · 看房清單<small>私人市場</small></div><span class="sym">›</span></a>
+  <a class="chip" href="housing.html"><div>🏘️ 可負擔住房 · 渠道清單<small>五條路對照</small></div><span class="sym">›</span></a>
+  <a class="chip" href="index.html"><div>🎛️ 三才控制中心<small>總覽全局</small></div><span class="sym">›</span></a>
+</section>
+
+<div class="legend">無符號＝看 · › ＝站內 · 橙色＝做</div>
+<div class="disc">本頁依中介來信與維州租賃通則整理,非法律意見。通知期與退租程序以你的租約條款及 Consumer Affairs Victoria 規定為準。金額為估算。</div>
+
+<script>
+const dl=new Date('2026-09-22T23:59:59');
+const days=Math.ceil((dl-new Date())/86400000);
+document.getElementById('cd').textContent = days>0 ? ('距通知截止還有 '+days+' 天') : '⚠ 已過通知截止日';
+document.getElementById('copyBtn').onclick=async function(){
+  const t=document.getElementById('tpl').textContent;
+  try{await navigator.clipboard.writeText(t)}
+  catch(e){const ta=document.createElement('textarea');ta.value=t;document.body.appendChild(ta);ta.select();document.execCommand('copy');ta.remove()}
+  this.textContent='✓ 已��製 · 填好日期再發';
+  setTimeout(()=>this.textContent='複製通知模板',2400);
+};
+</script>
+</body>
+</html>
